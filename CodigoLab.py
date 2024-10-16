@@ -33,7 +33,7 @@ filtered_v = []
 filtered_vector_type = []
 
 for i in range(len(vector_type)):
-    if vector_type[i] is 1 and y[i] < 0.007:
+    if vector_type[i] == 1 and y[i] < 0.007:
         filtered_x.append(x[i])
         filtered_y.append(y[i])
         filtered_u.append(u[i])
