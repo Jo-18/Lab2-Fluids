@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 # Abrir el archivo en modo lectura
 with open('PIVlab3.txt', 'r') as file:
     # Leer todas las líneas del archivo
@@ -30,21 +33,29 @@ filtered_v = []
 filtered_vector_type = []
 
 for i in range(len(vector_type)):
-    if vector_type[i] is 1 and y[i] < 0.007:
+    if vector_type[i] == 1 and y[i] < 0.007:
         filtered_x.append(x[i])
         filtered_y.append(y[i])
         filtered_u.append(u[i])
         filtered_v.append(v[i])
         filtered_vector_type.append(vector_type[i])
 
-print("x [m]:", filtered_x)
-print("y [m]:", filtered_y)
-print("u [m/s]:", filtered_u)
-print("v [m/s]:", filtered_v)
-print("Vector type [-]:", filtered_vector_type)
+# Definir la viscosidad
+h = 0.00981
 
+# Inicializar listas vacías para du_dy y shear_stress
+du_dy = []
+shear_stress = []
 
-import matplotlib.pyplot as plt
+# Calcular du_dy y shear_stress
+for i in range(1, len(filtered_u) - 1):
+    delta_y = filtered_y[i + 1] - filtered_y[i - 1]
+    if delta_y != 0:
+        du_dy_value = (filtered_u[i + 1] - filtered_u[i - 1]) / delta_y
+    else:
+        du_dy_value = 0
+    du_dy.append(du_dy_value)
+    shear_stress.append(h * du_dy_value)
 
 # Crear gráfico de x vs u
 fig, ax = plt.subplots()
@@ -76,4 +87,13 @@ ax.set_ylabel('v [m/s]')
 ax.set_title('Gráfico de y vs v')
 
 # Mostrar el gráfico
+plt.show()
+
+
+
+# Crear gráfico de filtered_y vs shear_stress
+plt.plot(filtered_y[1:-1], shear_stress, marker='o', linestyle='-', color='r')
+plt.xlabel('y [m]')
+plt.ylabel('Shear Stress [Pa]')
+plt.title('Gráfico de y vs Shear Stress')
 plt.show()
