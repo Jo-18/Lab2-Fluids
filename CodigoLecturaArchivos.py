@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 
 # Abrir el archivo en modo lectura
 with open('PIVlab9.txt', 'r') as file:
-    # Leer todas las líneas del archivo
     lines = file.readlines()
 
-# Inicializar listas vacías para cada columna
 x = []
 y = []
 u = []
@@ -15,10 +13,8 @@ vector_type = []
 
 # Iterar sobre cada línea de datos, saltando las primeras 3 líneas
 for line in lines[3:]:
-    # Dividir la línea en columnas usando una coma
     columns = line.strip().split(',')
-    
-    # Añadir cada valor a la lista correspondiente
+
     x.append(float(columns[0]))
     y.append(float(columns[1]))
     u.append(float(columns[2]) if columns[2] != 'NaN' else None)
@@ -40,7 +36,6 @@ for i in range(len(u)):
         filtered_v.append(-v[i])
         filtered_vector_type.append(vector_type[i])
 
-# Obtener el primer valor de la lista filtrada x
 first_value_x = filtered_x[0]
 
 # Filtrar las listas para mantener solo los valores donde x es igual al primer valor
@@ -58,10 +53,9 @@ for i in range(len(filtered_x)):
         final_v.append(filtered_v[i])
         final_vector_type.append(filtered_vector_type[i])
 
-# Calcular la derivada de final_u respecto a final_y
-du_dy = np.gradient(final_u, final_y)
 
-# Crear la lista shear_stress
+# Calculo de Shear Stress
+du_dy = np.gradient(final_u, final_y)
 h = 0.00981
 shear_stress = [du_dy_i * h for du_dy_i in du_dy]
 
@@ -70,45 +64,17 @@ with open('promedios.txt', 'a') as file:
     for i in range(len(final_x)):
         file.write(f"{final_x[i]}, {final_y[i]}, {final_u[i]}, {final_v[i]}, {final_vector_type[i]}, {shear_stress[i]}\n")
 
-# Crear una figura y un eje para el gráfico de x vs u
-fig1, ax1 = plt.subplots()
-
-# Graficar los datos filtrados
-ax1.plot(final_x, final_u, marker='o', linestyle='-', color='b')
-
-# Añadir etiquetas a los ejes
-ax1.set_xlabel('x [m]')
-ax1.set_ylabel('u [m/s]')
-plt.show()
-
-# Crear una figura y un eje para el gráfico de y vs v
 fig2, ax2 = plt.subplots()
-
-# Graficar los datos filtrados
 ax2.plot(final_y, final_v, marker='o', linestyle='-', color='r')
-
-# Añadir etiquetas a los ejes
 ax2.set_xlabel('y [m]')
 ax2.set_ylabel('v [m/s]')
-
-# Añadir un título al gráfico
 ax2.set_title('Velocity Profile in y-direction')
-
-# Mostrar el gráfico
 plt.show()
 
-# Crear una figura y un eje para el gráfico de y vs shear_stress
+
 fig3, ax3 = plt.subplots()
-
-# Graficar los datos de final_y y shear_stress
 ax3.plot(final_y, shear_stress, marker='o', linestyle='-', color='g')
-
-# Añadir etiquetas a los ejes
 ax3.set_xlabel('y [m]')
 ax3.set_ylabel('Shear Stress [Pa]')
-
-# Añadir un título al gráfico
 ax3.set_title('Shear Stress Profile')
-
-# Mostrar el gráfico
 plt.show()
