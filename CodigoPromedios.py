@@ -13,8 +13,8 @@ v = []
 vector_type = []
 shear_stress = []
 
-# Iterar sobre cada línea de datos, saltando la primera línea
-for line in lines[1:]:
+# Iterar sobre cada línea de datos
+for line in lines:
     # Dividir la línea en columnas usando una coma
     columns = line.strip().split(',')
     
@@ -26,30 +26,43 @@ for line in lines[1:]:
     vector_type.append(int(columns[4]))
     shear_stress.append(float(columns[5]))
 
-# Imprimir las listas para verificar los resultados
-print("x:", x)
-print("y:", y)
-print("u:", u)
-print("v:", v)
-print("vector_type:", vector_type)
-print("shear_stress:", shear_stress)
+# Inicializar diccionarios para acumular sumas y contar ocurrencias
+sum_u = {}
+sum_v = {}
+sum_shear_stress = {}
+count = {}
 
-# Crear una figura y un eje para el gráfico de x vs u
-fig1, ax1 = plt.subplots()
+# Iterar sobre las listas y acumular sumas y conteos
+for i in range(len(y)):
+    if y[i] not in sum_u:
+        sum_u[y[i]] = 0
+        sum_v[y[i]] = 0
+        sum_shear_stress[y[i]] = 0
+        count[y[i]] = 0
+    sum_u[y[i]] += u[i]
+    sum_v[y[i]] += v[i]
+    sum_shear_stress[y[i]] += shear_stress[i]
+    count[y[i]] += 1
 
-# Graficar los datos filtrados
-ax1.plot(x, u, marker='o', linestyle='-', color='b')
+# Inicializar listas para los promedios
+promedios_u = []
+promedios_v = []
+promedio_ss = []
+unique_y = []
 
-# Añadir etiquetas a los ejes
-ax1.set_xlabel('x [m]')
-ax1.set_ylabel('u [m/s]')
-plt.show()
+# Calcular los promedios y guardarlos en las listas correspondientes
+for key in sum_u:
+    promedios_u.append(sum_u[key] / count[key])
+    promedios_v.append(sum_v[key] / count[key])
+    promedio_ss.append(sum_shear_stress[key] / count[key])
+    unique_y.append(key)
+
 
 # Crear una figura y un eje para el gráfico de y vs v
 fig2, ax2 = plt.subplots()
 
 # Graficar los datos filtrados
-ax2.plot(y, v, marker='o', linestyle='-', color='r')
+ax2.plot(unique_y, promedios_v, marker='o', linestyle='-', color='r')
 
 # Añadir etiquetas a los ejes
 ax2.set_xlabel('y [m]')
@@ -65,11 +78,11 @@ plt.show()
 fig3, ax3 = plt.subplots()
 
 # Graficar los datos de x y u
-ax3.plot(y, v, marker='o', linestyle='-', color='g')
+ax3.plot(unique_y, promedio_ss, marker='o', linestyle='-', color='g')
 
 # Añadir etiquetas a los ejes
-ax3.set_xlabel('x [m]')
-ax3.set_ylabel('u [m/s]')
+ax3.set_xlabel('y [m]')
+ax3.set_ylabel('Shear Stress [Pa]')
 
 # Añadir un título al gráfico
 ax3.set_title('x vs u')
