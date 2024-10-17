@@ -69,7 +69,7 @@ ax2.set_xlabel('y [m]')
 ax2.set_ylabel('v [m/s]')
 
 # Añadir un título al gráfico
-ax2.set_title('Velocity Profile in y-direction')
+ax2.set_title('Average Velocity Profile in y-direction')
 
 # Mostrar el gráfico
 plt.show()
@@ -85,7 +85,7 @@ ax3.set_xlabel('y [m]')
 ax3.set_ylabel('Shear Stress [Pa]')
 
 # Añadir un título al gráfico
-ax3.set_title('x vs u')
+ax3.set_title('Average Shear Stress Profile in y-direction')
 
 # Mostrar el gráfico
 plt.show()
